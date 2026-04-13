@@ -6,10 +6,10 @@ import { toast } from "sonner";
 // RESET PASSWORD REQUEST
 export const useResetPasswordRequest = () => {
   return useMutation({
-    mutationFn: async ({ payload, token }: { payload: any; token: string }) => {
+    mutationFn: async ({ payload }: { payload: any; }) => {
       try {
         const response = await axiosInstance.post(
-          `/auth/reset-password/${token}`,
+          `/auth/reset-password`,
           payload,
         );
         return response.data;
@@ -24,7 +24,7 @@ export const useResetPasswordRequest = () => {
       if (error.response?.status === 500) {
         toast.error("Internal Server Error");
       } else {
-        toast.error(error.response?.data?.message);
+        toast.error(error.response?.data?.message || "something went wrong. Please, try again later");
       }
     },
   });

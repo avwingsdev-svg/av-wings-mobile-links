@@ -2,10 +2,8 @@
 import { useResetPasswordRequest } from "@/services/auth.request";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { BiHide, BiShow } from "react-icons/bi";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { toast } from "sonner";
 import * as yup from "yup";
 
 interface ResetPasswordProps {
@@ -17,19 +15,17 @@ const schema = yup.object().shape({
     .string()
     .required("Password is required")
     .min(6, "Password must be at least 6 characters")
-    .max(32, "Password must not exceed 15 characters"),
+    .max(32, "Password must not exceed 32 characters"),
   confirmPassword: yup
     .string()
     .required("Confirm Password is required")
-    .min(6, "Confirm Password must be at least 6 characters")
-    .max(32, "Confirm Password must not exceed 15 characters"),
+    .oneOf([yup.ref("password")], "Passwords do not match"),
 });
 
 export default function ResetPassword({ token }: ResetPasswordProps) {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { mutate: resetPassword, isPending } = useResetPasswordRequest();
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();
 
   const {
     register,
@@ -38,29 +34,10 @@ export default function ResetPassword({ token }: ResetPasswordProps) {
   } = useForm({ resolver: yupResolver(schema) });
 
   const onSubmitHandler = async (data: any) => {
-    if (data?.password !== data?.confirmPassword) {
-      toast.error("Password does not match");
-      return;
-    }
-
     const payload = {
       password: data?.password,
     };
-
-    resetPassword(
-      { payload, token },
-      {
-        onSuccess: (data) => {
-          toast.success(data?.message);
-          setTimeout(() => {
-            router.push("/login");
-          }, 5000);
-        },
-        onError: () => {
-          console.log("error occured");
-        },
-      },
-    );
+    resetPassword({ payload });
   };
 
   return (
@@ -70,11 +47,7 @@ export default function ResetPassword({ token }: ResetPasswordProps) {
           <h1 className="text-white text-3xl font-bold leading-none">
             Reset Password
           </h1>
-
-          <p className="text-[#D9D9D9] text-xl mt-3">
-            Enter your new password
-          </p>
-
+          <p className="text-[#D9D9D9] text-lg mt-3">Enter your new password</p>
           <form
             onSubmit={handleSubmit(onSubmitHandler)}
             className="mt-14 flex flex-col gap-7"
@@ -143,7 +116,7 @@ export default function ResetPassword({ token }: ResetPasswordProps) {
 
             <button
               disabled={isPending}
-              className="mt-10 p-3 w-full rounded-xl bg-[#CFB07A] text-[#111111] text-[1.5rem] sm:text-[1.9rem] font-semibold transition hover:opacity-95 disabled:opacity-70 cursor-pointer"
+              className="mt-10 p-3 w-full rounded-xl bg-[#CFB07A] text-[#111111] text-lg font-semibold transition hover:opacity-95 disabled:opacity-70 cursor-pointer"
             >
               {isPending ? "Saving..." : "Save"}
             </button>
