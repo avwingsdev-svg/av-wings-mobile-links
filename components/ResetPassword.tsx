@@ -43,7 +43,7 @@ export default function ResetPassword({ token }: ResetPasswordProps) {
 
   return (
     <div className="min-h-screen w-full bg-[#111111] flex items-cente justify-center p-6 pt-16 sm:px-4 lg:px-8">
-      <div className="w-full max-w-[420px]">
+      <div className="w-full max-w-[420px]   ">
         <div className="w-full">
           <h1 className="text-white text-3xl font-bold leading-none">
             Reset Password
