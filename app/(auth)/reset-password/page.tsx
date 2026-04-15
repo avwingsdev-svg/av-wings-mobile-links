@@ -5,7 +5,7 @@ export default function ResetPasswordPage({
 }: {
   searchParams: any;
 }) {
-  const resetPasswordToken = searchParams?.resetToken;
+  const resetPasswordToken = searchParams?.token;
 
   return (
     <div className="min-h-screen bg-[#111111]">
