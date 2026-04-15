@@ -35,7 +35,8 @@ export default function ResetPassword({ token }: ResetPasswordProps) {
 
   const onSubmitHandler = async (data: any) => {
     const payload = {
-      password: data?.password,
+      newPassword: data?.password,
+      token,
     };
     resetPassword({ payload });
   };
