@@ -1,11 +1,13 @@
 import ResetPassword from "@/components/ResetPassword";
 
-export default function ResetPasswordPage({
+export default async function ResetPasswordPage({
   searchParams,
 }: {
-  searchParams: any;
+  searchParams: Promise<{ token?: string }>;
 }) {
-  const resetPasswordToken = searchParams?.token;
+  const params = await searchParams;
+  const resetPasswordToken = params?.token ?? "";
+
   return (
     <div className="min-h-screen bg-[#111111]">
       <ResetPassword token={resetPasswordToken} />
